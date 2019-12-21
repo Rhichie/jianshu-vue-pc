@@ -96,7 +96,7 @@
     },
     methods: {
       getArticleList() {
-        this.$axios.get('/getArticleList',{params:{offset:this.articles.offset,limit:this.articles.limit}}).then(res => {
+        this.$axios.get('/article/getArticleList',{params:{offset:this.articles.offset,limit:this.articles.limit}}).then(res => {
           this.moreButtonLoading = false;
           if(res.rows.length < this.articles.limit){
             this.moreButton = false

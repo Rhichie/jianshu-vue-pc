@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="isNullTips" v-if="isShow">
-      <div class="tips">仿简书</div>
+      <div class="tips">KDK</div>
     </div>
   </div>
 
@@ -42,8 +42,8 @@
         isFirst:true,
         article: {
           id: null,
-          title:'',
-          content: '',
+          title:'按时灯笼裤飞机是的分厘卡',
+          content: 'hello',
           status: 1,
         },
         toolbars: {
@@ -98,10 +98,10 @@
       this.fetchUploadToken()
       // 判断是否有文章存在，如果没有，则不显示编译框
       if(this.articles.id){
-        this.getArticleById();
+        // this.getArticleById();
 
       }else{
-        this.isShow = true;
+        // this.isShow = true;
       }
 
     },
@@ -379,6 +379,10 @@
     box-sizing: border-box;
     overflow: hidden;
     position: relative;
+  }
+
+  .article_edit {
+    width: 50%;
   }
   .markdownBox{
     height: 100%;

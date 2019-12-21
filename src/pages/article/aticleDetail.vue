@@ -190,7 +190,9 @@
       return {
         id: '',
         toolbarsFlag: false,
-        article: {},
+        article: {
+          content: '```asdf```'
+        },
         user: {},
         ul_style_padding: '45%',
         commentInput: '',

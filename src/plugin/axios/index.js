@@ -4,7 +4,7 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import $router from '../../router'
 let loading = null
-axios.defaults.baseURL = '/api/'
+axios.defaults.baseURL = '/kdk_api/'
 axios.defaults.headers.Authorization = localStorage['token'] || null
 axios.interceptors.request.use(function (config) {
   // Do something before request is sent

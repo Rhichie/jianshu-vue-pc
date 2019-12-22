@@ -11,18 +11,18 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': {
-        target: 'http://127.0.0.1:7002',
+      '/kdk_api': {
+        target: 'http://127.0.0.1:8888',
         changeOrigin: true,
-        pathRewrite: {
-          '^/api': '/'
-        }
+        // pathRewrite: {
+        //   '^/kdk_api': '/'
+        // }
       }
     },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8888, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,
     notifyOnErrors: true,

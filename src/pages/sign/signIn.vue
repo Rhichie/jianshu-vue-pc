@@ -4,7 +4,7 @@
     <div class="main">
       <h4 class="title">
         <div class="normal-title">
-          <router-link :to="{path:'/signIn'}"><span class="active">登陆</span></router-link>
+          <router-link :to="{path:'/signIn'}"><span class="active">登录</span></router-link>
           <b>·</b>
           <router-link :to="{path:'/signUp'}"><span>注册</span></router-link>
         </div>
@@ -19,39 +19,39 @@
             <input placeholder="密码" type="password" id="password" v-model="password">
             <i class="iconfont ic-password"></i>
           </div>
-          <div class="remember-btn">
-            <input type="checkbox" v-model="isChecked" checked="checked" id="remember_me" @click="changeCheckStatus()">
-            <span>记住我</span>
-          </div>
-          <div class="forget-btn">
-            <a class="" data-toggle="dropdown" href="">登录遇到问题?</a>
-            <ul class="dropdown-menu">
-              <li><a href="">用手机号重置密码</a></li>
-              <li><a href="">用邮箱重置密码</a></li>
-              <li><a href="">无法用海外手机号登录</a></li>
-              <li><a href="">无法用 Google 帐号登录</a></li>
-            </ul>
-          </div>
+          <!--<div class="remember-btn">-->
+            <!--<input type="checkbox" v-model="isChecked" checked="checked" id="remember_me" @click="changeCheckStatus()">-->
+            <!--<span>记住我</span>-->
+          <!--</div>-->
+          <!--<div class="forget-btn">-->
+            <!--<a class="" data-toggle="dropdown" href="">登录遇到问题?</a>-->
+            <!--<ul class="dropdown-menu">-->
+              <!--<li><a href="">用手机号重置密码</a></li>-->
+              <!--<li><a href="">用邮箱重置密码</a></li>-->
+              <!--<li><a href="">无法用海外手机号登录</a></li>-->
+              <!--<li><a href="">无法用 Google 帐号登录</a></li>-->
+            <!--</ul>-->
+          <!--</div>-->
           <button class="sign-in-button" id="sign-in-form-submit-btn" type="button" @click="submit">
             <span id="sign-in-loading"></span>登录
           </button>
         </form>
-        <div class="more-sign">
-          <h6>社交帐号登录</h6>
-          <ul>
-            <li id="weibo-link-wrap" class="">
-              <a class="weibo" id="weibo-link">
-                <i class="iconfont ic-weibo"></i>
-              </a>
-            </li>
-            <li><a class="weixin" href=""><i class="iconfont ic-wechat"></i></a></li>
-            <li><a class="qq" href=""><i class="iconfont ic-qq_connect"></i></a></li>
-            <li class="js-more-method"><a href="javascript:void(0);"><i class="iconfont ic-more"></i></a></li>
-            <li class="js-hide-method hide"><a class="douban" href=""><i class="iconfont ic-douban"></i></a></li>
-          </ul>
+        <!--<div class="more-sign">-->
+          <!--<h6>社交帐号登录</h6>-->
+          <!--<ul>-->
+            <!--<li id="weibo-link-wrap" class="">-->
+              <!--<a class="weibo" id="weibo-link">-->
+                <!--<i class="iconfont ic-weibo"></i>-->
+              <!--</a>-->
+            <!--</li>-->
+            <!--<li><a class="weixin" href=""><i class="iconfont ic-wechat"></i></a></li>-->
+            <!--<li><a class="qq" href=""><i class="iconfont ic-qq_connect"></i></a></li>-->
+            <!--<li class="js-more-method"><a href="javascript:void(0);"><i class="iconfont ic-more"></i></a></li>-->
+            <!--<li class="js-hide-method hide"><a class="douban" href=""><i class="iconfont ic-douban"></i></a></li>-->
+          <!--</ul>-->
 
-          <div class="weibo-geetest-captcha"></div>
-        </div>
+          <!--<div class="weibo-geetest-captcha"></div>-->
+        <!--</div>-->
       </div>
     </div>
   </div>
@@ -65,8 +65,8 @@ export default {
   data(){
     return {
       isChecked:true,
-      username:'jyf',
-      password:'123'
+      username:'',
+      password:''
     }
   },
   computed:{
@@ -84,14 +84,15 @@ export default {
       }else {
         this.$axios({
           method: 'post',
-          url: '/login',
+          url: '/sysAccount/login',
           data: {
             username: this.username,
             password: this.password
           }
         })
           .then(res => {
-            localStorage['token'] = res.token
+            console.log(res)
+            localStorage['Access-Token'] = res.data.data
             this.$axios.defaults.headers.Authorization = localStorage['token']
             // 设置 cookie 一定要存 uuid整个系统依赖这个数据进行校验和存储
             // 且必须先设置uuid的cookie再进行vuex的存储，因为vuex存储依赖cookie的uuid

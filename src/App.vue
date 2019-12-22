@@ -50,9 +50,6 @@
 </script>
 <style>
 
-</style>
-<style>
-
   @import './assets/icon/iconfont.css';
   @import '../static/style.css';
   @import '../static/index.css';
@@ -102,5 +99,13 @@
     -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.2);
     border-radius: 1px;
     background: white;
+  }
+
+  .my-loading circle{
+    stroke: #ec7259 !important;
+  }
+
+  .my-loading  p{
+    color: #ec7259 !important;
   }
 </style>

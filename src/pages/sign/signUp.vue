@@ -17,7 +17,7 @@
               <i class="iconfont ic-user"></i>
             </div>
             <div class="input-prepend restyle no-radius js-normal">
-              <input placeholder="手机号" type="tel" id="user_mobile_number" v-model="mobileNumber" @focus="cancelShow('tooltip2')">
+              <input placeholder="用户名" type="tel" id="user_mobile_number" v-model="username" @focus="cancelShow('tooltip2')">
               <i class="iconfont ic-phonenumber"></i>
             </div>
             <div class="input-prepend">
@@ -25,16 +25,16 @@
               <i class="iconfont ic-password"></i>
             </div>
             <input type="button" value="注册" @click="signUpSubmit()" class="sign-up-button" id="sign_up_btn" data-disable-with="注册">
-            <p class="sign-up-msg">点击 “注册” 即表示您同意并愿意遵守简书<br> <a  href="">用户协议</a> 和 <a href="">隐私政策</a> 。</p>
+            <!--<p class="sign-up-msg">点击 “注册” 即表示您同意并愿意遵守简书<br> <a  href="">用户协议</a> 和 <a href="">隐私政策</a> 。</p>-->
           </form>
           <!-- 更多注册方式 -->
-          <div class="more-sign">
-            <h6>社交帐号直接注册</h6>
-            <ul>
-              <li><a id="weixin" class="weixin" href=""><i class="iconfont ic-wechat"></i></a></li>
-              <li><a id="qq" class="qq" href=""><i class="iconfont ic-qq_connect"></i></a></li>
-            </ul>
-          </div>
+          <!--<div class="more-sign">-->
+            <!--<h6>社交帐号直接注册</h6>-->
+            <!--<ul>-->
+              <!--<li><a id="weixin" class="weixin" href=""><i class="iconfont ic-wechat"></i></a></li>-->
+              <!--<li><a id="qq" class="qq" href=""><i class="iconfont ic-qq_connect"></i></a></li>-->
+            <!--</ul>-->
+          <!--</div>-->
           <div class="tooltip tooltip-error fade right" role="tooltip" id="tooltip1" style="top: 7px; left: 300px; display: block;">
             <div class="tooltip-arrow tooltip-arrow-border" style="top: 50%;"></div>
             <div class="tooltip-arrow tooltip-arrow-bg" style="top: 50%;"></div>
@@ -43,7 +43,7 @@
           <div class="tooltip tooltip-error fade right" role="tooltip" id="tooltip2" style="top: 57px; left: 300px; display: block;">
             <div class="tooltip-arrow tooltip-arrow-border" style="top: 50%;"></div>
             <div class="tooltip-arrow tooltip-arrow-bg" style="top: 50%;"></div>
-            <div class="tooltip-inner"><i class="iconfont ic-error"></i><span>请输入正确的手机号</span></div>
+            <div class="tooltip-inner"><i class="iconfont ic-error"></i><span>用户名由字母和数字组成</span></div>
           </div>
           <div class="tooltip tooltip-error fade right" role="tooltip" id="tooltip3" style="top: 107px; left: 300px; display: block;">
             <div class="tooltip-arrow tooltip-arrow-border" style="top: 50%;"></div>
@@ -57,11 +57,12 @@
 </template>
 
 <script>
+  import { Message } from 'element-ui'
 export default {
   data(){
     return {
       nickname:'',
-      mobileNumber:'',
+      username:'',
       password:''
     }
   },
@@ -80,12 +81,12 @@ export default {
         tip.className = 'tooltip tooltip-error right in';
         flag +=1;
       }
-      if(this.mobileNumber === '' || !this.mobileNumber.match(/^\d{11}$/)){
+      if(this.username === '' || !this.username.match(/^[a-zA-Z]\w{3,17}$/)){
         let tip = document.getElementById('tooltip2');
         tip.className = 'tooltip tooltip-error right in';
         flag +=1;
       }
-      if(this.password === '' || this.password.match(/^[a-zA-Z]\w{5,17}$/)){
+      if(this.password === '' || !this.password.match(/^[a-zA-Z0-9]\w{3,17}$/)){
         let tip = document.getElementById('tooltip3');
         tip.className = 'tooltip tooltip-error right in';
         flag +=1;
@@ -93,15 +94,23 @@ export default {
       if(flag !== 0){
         return 0;
       }else{
-        //注册成功
-        this.$store.dispatch('signUpUser',{
-          username:this.nickname,
-          mobilePhone:this.mobileNumber,
-          password:this.password,
-          login:true
-        });
-        sessionStorage.setItem('isLogin','true');
-        history.back(-1);
+        // 注册
+        this.$axios.post('/sysAccount/register', {
+          username: this.username,
+          password: this.password,
+          nickname: this.nickname
+        }).then(res=>{
+          //注册成功
+          // this.$store.dispatch('signUpUser',{
+          //   username:this.nickname,
+          //   username:this.username,
+          //   password:this.password,
+          //   login:true
+          // });
+          sessionStorage.setItem('isLogin','true');
+          this.$router.push({path:'/signIn'})
+        }).catch(err=>{
+        })
       }
     },
     //错误提示显示之后，当鼠标聚焦在输入框中，对应的错误提示不显示

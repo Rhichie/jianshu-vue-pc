@@ -111,7 +111,7 @@
     methods: {
       addArticle() {
         if (this.checkTypeInfo.id) {
-          this.$axios.post('addArticleByTypeId', {type_id: this.checkTypeInfo.id}).then(res => {
+          this.$axios.post('addArticleBySetId', {type_id: this.checkTypeInfo.id}).then(res => {
             this.articleList = this.articleList.map(info => {
               info.selected = false
               return info
@@ -181,7 +181,7 @@
             type: 'warning',
             center: true
           }).then(() => {
-            this.$axios.post('delType', {id: this.checkTypeInfo.id}).then(res => {
+            this.$axios.post('delArticleSet', {id: this.checkTypeInfo.id}).then(res => {
               this.typeList = this.typeList.filter(element => {
                 return element.id != res.id;
               });
@@ -253,7 +253,7 @@
           Message.error("文集名称不能为空")
           return false;
         }
-        this.$axios.post('addType', {typeName: this.typeName}).then(res => {
+        this.$axios.post('addArticleSet', {typeName: this.typeName}).then(res => {
           this.typeName = ''
           this.newShow = false
           Message.success("添加成功")

@@ -9,7 +9,7 @@ axios.defaults.headers['Access-Token'] = localStorage['Access-Token'] || null
 axios.interceptors.request.use(function (config) {
   // Do something before request is sent
 
-  if(!['getArticleListByTypes','editArticle'].includes(config.url,0)){
+  if(!['getArticleListByTypes','/articleDetail/editArticle'].includes(config.url,0)){
     loading = Loading.service({
       lock: true,
       text: '加载中....',

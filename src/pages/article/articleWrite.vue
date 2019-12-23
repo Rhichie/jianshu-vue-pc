@@ -17,7 +17,7 @@
       </div>
       <ul class="type_list">
         <li :class="info.selected?'selected':'' " v-for="info in typeList" @click="typeSelected(info)">
-          <div class="left">{{info.type_name}}</div>
+          <div class="left">{{info.name}}</div>
           <div class="right" v-if="info.selected">
             <el-dropdown trigger="click" @command="typeSetting">
               <span class="el-dropdown-link">
@@ -46,21 +46,20 @@
           <div class="left" >
             <div class="title">{{info.title}}</div>
             <div class="content">{{info.text}}</div>
-            <div class="number">字数:{{info.article_num}}</div>
           </div>
           <div class="right">
-            <el-dropdown trigger="click" @command="storeGetArticle">
+            <el-dropdown trigger="click" @command="articleSetting">
               <span class="el-dropdown-link">
                 <i class="el-icon-setting el-icon--right" style="color: black;font-size: 1.8rem"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="ok" v-if="info.status === 0"><i class="el-icon-refresh"></i>重新发布</el-dropdown-item>
-                <el-dropdown-item command="ok" v-if="info.status === 1 || info.status === 2"><i class="el-icon-upload"></i>直接发布</el-dropdown-item>
-                <el-dropdown-item command="myself" v-if="info.status != 2"><i class="el-icon-goods"></i>设为私密</el-dropdown-item>
-                <el-dropdown-item command="history"><i class="el-icon-time"></i>历史版本</el-dropdown-item>
-                <el-dropdown-item command="detail"><i class="el-icon-view"></i>阅览文章</el-dropdown-item>
-                <el-dropdown-item command="share" v-if="info.status === 0"><i class="el-icon-share"></i>分享文章</el-dropdown-item>
-                <el-dropdown-item command="move"><i class="el-icon-document"></i>移动文章</el-dropdown-item>
+                <!--<el-dropdown-item command="ok" v-if="info.status === 0"><i class="el-icon-refresh"></i>重新发布</el-dropdown-item>-->
+                <!--<el-dropdown-item command="ok" v-if="info.status === 1 || info.status === 2"><i class="el-icon-upload"></i>直接发布</el-dropdown-item>-->
+                <!--<el-dropdown-item command="myself" v-if="info.status != 2"><i class="el-icon-goods"></i>设为私密</el-dropdown-item>-->
+                <!--<el-dropdown-item command="history"><i class="el-icon-time"></i>历史版本</el-dropdown-item>-->
+                <!--<el-dropdown-item command="detail"><i class="el-icon-view"></i>阅览文章</el-dropdown-item>-->
+                <!--<el-dropdown-item command="share" v-if="info.status === 0"><i class="el-icon-share"></i>分享文章</el-dropdown-item>-->
+                <!--<el-dropdown-item command="move"><i class="el-icon-document"></i>移动文章</el-dropdown-item>-->
                 <el-dropdown-item command="del"><i class="el-icon-delete"></i>删除文章</el-dropdown-item>
 
 
@@ -111,22 +110,22 @@
     methods: {
       addArticle() {
         if (this.checkTypeInfo.id) {
-          this.$axios.post('addArticleBySetId', {type_id: this.checkTypeInfo.id}).then(res => {
+          this.$axios.post('/article/addArticleBySetId', {articleSetId: this.checkTypeInfo.articleSetId}).then(res => {
             this.articleList = this.articleList.map(info => {
               info.selected = false
               return info
             })
-            res.data.selected = true
-            this.checkArticleInfo = res.data;
-            this.articleList.unshift(res.data)
+            res.data.data.selected = true
+            this.checkArticleInfo = res.data.data;
+            this.articleList.unshift(res.data.data)
           }).catch(err => {
           })
         }
       },
       articleSetting(command) {
-        this.storeGetArticle(command)
+        // this.storeGetArticle(command)
         if (command === 'ok'){
-          this.$store.dispatch('getArticle', { id:this.checkArticleInfo.id, backId:this.checkArticleInfo.backId, typeId: this.checkTypeInfo.id, command: command })
+          this.$store.dispatch('getArticle', { id:this.checkArticleInfo.articleId, backId:this.checkArticleInfo.backId, articleSetId: this.checkTypeInfo.id, command: command })
         }
         else if (command === 'myself'){
 
@@ -142,9 +141,9 @@
             type: 'warning',
             center: true
           }).then(() => {
-            this.$axios.post('delArticle', {id: this.checkArticleInfo.id}).then(res => {
+            this.$axios.post('/article/delArticle', {articleId: this.checkArticleInfo.articleId}).then(res => {
               this.articleList = this.articleList.filter(element => {
-                return element.id != res.id;
+                return element.articleId != res.data.data;
               });
               if (this.typeList.length > 0) {
                 this.typeList[0].selected = true;
@@ -231,15 +230,15 @@
           info.selected = false
         }
         info.selected = true
-        this.getArticleListByTypes(this.checkTypeInfo.id)
+        this.getArticleListByTypes(this.checkTypeInfo.articleSetId)
       },
       getTypeList() {
-        this.$axios.get('getListByUserId').then(res => {
-          this.typeList = res.rows.map((info, index) => {
+        this.$axios.post('/articleSet/getListByUserId',{}).then(res => {
+          this.typeList = res.data.data.map((info, index) => {
             if (index === 0) {
               info.selected = true
               this.checkTypeInfo = info
-              this.getArticleListByTypes(info.id)
+              this.getArticleListByTypes(info.articleSetId)
             } else {
               info.selected = false
             }
@@ -253,18 +252,19 @@
           Message.error("文集名称不能为空")
           return false;
         }
-        this.$axios.post('addArticleSet', {typeName: this.typeName}).then(res => {
+        this.$axios.post('/articleSet/addArticleSet', {name: this.typeName}).then(res => {
+          console.log(res)
           this.typeName = ''
           this.newShow = false
           Message.success("添加成功")
-          this.typeList.push(res)
+          this.typeList.push(res.data.data.data)
         }).catch(err => {
 
         })
       },
       getArticleListByTypes(type_id) {
-        this.$axios.get('getArticleBackByTypeId', {params: {type_id: type_id}}).then(res => {
-          this.articleList = res.rows.map((info, index) => {
+        this.$axios.post('/article/getArticleBackByTypeId', {articleSetId: type_id}).then(res => {
+          this.articleList = res.data.data.map((info, index) => {
             if (index === 0){
               info.selected = true
               this.checkArticleInfo = info
@@ -279,8 +279,8 @@
       },
       storeGetArticle(command = null) {
         let getArticle = {}
-        if(this.checkArticleInfo.id){
-          getArticle = { id:this.checkArticleInfo.id, backId:this.checkArticleInfo.backId, typeId: this.checkTypeInfo.id, command: command }
+        if(this.checkArticleInfo.articleId){
+          getArticle = { articleId:this.checkArticleInfo.articleId, backId:this.checkArticleInfo.backId, articleSetId: this.checkTypeInfo.articleSetId, command: command }
         }
         this.$store.dispatch('getArticle', getArticle)
       }
@@ -314,12 +314,8 @@
           }
         }else{
           this.articleList = this.articleList.map(info=>{
-            if(info.id === curVal.id){
-              info.backId = curVal.backId
+            if(info.articleId === curVal.articleId){
               info.title = curVal.title
-              info.text = curVal.text
-              info.article_num = curVal.article_num
-              info.status = curVal.status
             }
             return info;
           })

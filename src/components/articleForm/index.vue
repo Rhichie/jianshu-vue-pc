@@ -6,7 +6,9 @@
           <input type="text" v-model="article.title" @input="onchangeTitle"/>
         </div>
         <div class="utils">
-          <el-button type="danger" round @click="save" v-show="releaseBtn">发布<i class="el-icon-check"></i> </el-button>
+          <el-button type="danger" round @click="save" v-show="releaseBtn && this.article.isPublish==2">发布<i class="el-icon-check"></i> </el-button>
+          <el-button type="danger" round @click="save" v-show="releaseBtn && this.article.isPublish==3">重新发布<i class="el-icon-check"></i> </el-button>
+          <el-button type="danger" round @click="save" v-show="releaseBtn && this.article.isPublish==4">取消发布<i class="el-icon-check"></i> </el-button>
           <el-button type="info" round v-show="!releaseBtn"><i class="el-icon-loading"></i> 正在保存</el-button>
         </div>
       </div>
@@ -41,9 +43,10 @@
         contentTimer: null,
         isFirst:true,
         article: {
-          id: null,
-          title:'按时灯笼裤飞机是的分厘卡',
-          content: 'hello',
+          articleId: null,
+          title:'',
+          html:'',
+          content: '',
           status: 1,
         },
         toolbars: {
@@ -95,10 +98,11 @@
 
     mounted() {
       // 去服务端生成七牛token
-      this.fetchUploadToken()
+      // this.fetchUploadToken()
       // 判断是否有文章存在，如果没有，则不显示编译框
-      if(this.articles.id){
-        // this.getArticleById();
+      console.log(this.articles.articleId)
+      if(this.articles.articleId){
+        this.getArticleById();
 
       }else{
         // this.isShow = true;
@@ -107,7 +111,7 @@
     },
     methods: {
       getArticleById(){
-        if(this.articles.backId){
+        if(this.articles.articleId){
           let loading = Loading.service({
             lock: true,
             text: 'Loading',
@@ -115,10 +119,10 @@
           });
           this.checkIsLastTimer().then(ret=>{
             loading.close()
-            this.$axios.get('getArticleBackById',{params:{id:this.articles.backId}}).then(res=>{
+            this.$axios.post('/article/getArticleDetailById',{articleId:this.articles.articleId}).then(res=>{
               this.isFirst = true;
-              if(!res.data.content || res.data.content === ' '){}
-              this.article = res.data
+              if(!res.data.data.content || res.data.data.content === ' '){}
+              this.article = res.data.data
             }).catch(err=>{})
           })
         }
@@ -187,19 +191,22 @@
       save() {
         this.releaseBtn = false
         let data = {
-          id: this.articles.id,
-          backId: this.articles.backId,
+          articleId: this.articles.articleId
         }
         this.checkIsLastTimer().then(ret=>{
-          data.status = 0
+          data.originalIsPublish = this.article.isPublish
+          if (this.article.isPublish == 2 || this.article.isPublish == 3) {
+            data.isPublish = 4
+          } else {
+            data.isPublish = 2
+          }
           this.updateStatus(data,'您确定要将这篇文章发布吗?').then(res=>{
+            this.article.isPublish = res.data.data.isPublish
             let updateArticleObj = {
-              article_id: res.id,
-              id: this.article.id,
+              articleId: this.article.articleId,
               title: this.article.title,
               text: this.article.text,
-              article_num: this.article.article_num,
-              status: res.status
+              isPublish: res.data.data.isPublish
             }
             this.storeUpdateArticle(updateArticleObj,'ok')
             Message.success('发布成功！')
@@ -215,20 +222,20 @@
       postArticle() {
         this.releaseBtn = false
         let articleInfo = {
-          id: this.article.id,
-          type_id: this.article.type_id,
-          article_id: this.article.article_id,
+          articleId: this.article.articleId,
           title: this.article.title,
           content: this.article.content,
-          status: 0
+          html: this.article.html,
+          isPublish: this.article.isPublish
         }
 
-        this.$axios.post('editArticle',{query:articleInfo,html:this.article.html}).then(res=>{
+        this.$axios.post('/articleDetail/editArticle', articleInfo).then(res=>{
           this.updateRelease()
-          this.storeUpdateArticle(res)
+          this.storeUpdateArticle(res.data.data)
+          this.article.isPublish = res.data.data.isPublish
         }).catch(err=>{
           this.updateRelease()
-          Message.error('自动更新失败')
+          Message.error('自动保存失败')
         })
       },
       updateRelease () {
@@ -238,12 +245,9 @@
       },
       storeUpdateArticle(res,command = null) {
         this.$store.dispatch('updateArticle',{
-          id: res.article_id,
-          backId: res.id,
+          articleId: res.articleId,
           title: res.title,
-          text: res.text,
-          article_num: res.article_num,
-          status: res.status,
+          isPublish: res.isPublish,
           command: command
         })
       },
@@ -313,14 +317,14 @@
           Message.error("分享功能还在迭代开发中......")
         }
         else if (this.articles.command === 'del') {
-          title = '您确定要将这篇文章移到草稿箱吗?'
-          data.status = 3
+          title = '您确定要将这篇文章删除吗?'
+          // data.status = 3
           message = '删除'
         }
         if(['del','myself'].includes(this.articles.command)){
           this.updateStatus(data,title).then(res=>{
             let updateArticleObj = {
-              article_id: res.id,
+              articleId: res.id,
               id: this.article.id,
               title: this.article.title,
               text: this.article.text,
@@ -342,7 +346,7 @@
             type: 'warning',
             center: true
           }).then(() => {
-            this.$axios.post('updateStatus', data).then(res => {
+            this.$axios.post('/article/updateStatus', data).then(res => {
               resolve(res)
             }).catch(err => {
               reject(err)
@@ -359,7 +363,7 @@
     watch: {
       articles: function (cur,old) {
         if(!cur.command){
-          if(cur.id){
+          if(cur.articleId){
             this.isShow = false
             this.getArticleById();
           }else{

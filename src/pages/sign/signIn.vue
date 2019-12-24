@@ -91,16 +91,16 @@ export default {
           }
         })
           .then(res => {
-            console.log(res)
-            localStorage['Access-Token'] = res.data.data
-            this.$axios.defaults.headers.Authorization = localStorage['token']
+            localStorage['Access-Token'] = res.data.data.token
+            this.$axios.defaults.headers.Authorization = localStorage['Access-Token']
             // 设置 cookie 一定要存 uuid整个系统依赖这个数据进行校验和存储
             // 且必须先设置uuid的cookie再进行vuex的存储，因为vuex存储依赖cookie的uuid
             Cookies.set('uuid', res.uid, {
               expires: 1
             })
             Message.success('登录成功')
-            this.$store.dispatch('changeUserInfo',res)
+            console.log(res.data.data.user)
+            this.$store.dispatch('changeUserInfo',res.data.data.user)
 
             // 给提示留出时间，延迟跳转
             setTimeout(() => {

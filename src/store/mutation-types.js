@@ -20,3 +20,5 @@ export const GET_ARTICLE = 'getArticle';
 
 export const UPDATE_ARTICLE = 'updateArticle';
 
+export const CHANGE_SEARCH_WORD = 'changeSearchWord';
+

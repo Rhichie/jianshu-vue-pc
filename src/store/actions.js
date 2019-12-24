@@ -38,3 +38,6 @@ export const getArticle = ({commit,state},payload) => {
 export const updateArticle = ({commit,state},payload) => {
   commit(types.UPDATE_ARTICLE,payload);
 };
+export const changeSearchWord = ({commit,state},payload) => {
+  commit(types.CHANGE_SEARCH_WORD, payload);
+};

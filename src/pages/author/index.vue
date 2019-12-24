@@ -32,26 +32,26 @@
         </ul>
       </div>
     </div>
-    <div class="main-right">
-      <p class="title">专题公告</p>
-      <div class="description">
-        <p v-for="item in moreInfo.description" v-html="item"></p>
-        <a href="#" class="open">展开描述 <i class="iconfont ic-show"></i></a>
-      </div>
-      <div class="share">
-        <span>分享到</span>
-        <a href="#" class="option"><i class="iconfont ic-share-weibo"></i></a>
-        <a href="#" class="option"><i class="iconfont ic-share-wechat"></i></a>
-      </div>
-      <p class="title">管理员</p>
-      <ul class="list collection-editor">
-        <li v-for="(item,index) in moreInfo.editors">
-          <a href="#" class="avatar"><img :src="item.img" alt=""></a>
-          <a href="#" class="name" v-text="item.name"></a>
-          <span class="tag" v-show="index === 0">创建者</span>
-        </li>
-      </ul>
-    </div>
+    <!--<div class="main-right">-->
+      <!--<p class="title">专题公告</p>-->
+      <!--<div class="description">-->
+        <!--<p v-for="item in moreInfo.description" v-html="item"></p>-->
+        <!--<a href="#" class="open">展开描述 <i class="iconfont ic-show"></i></a>-->
+      <!--</div>-->
+      <!--<div class="share">-->
+        <!--<span>分享到</span>-->
+        <!--<a href="#" class="option"><i class="iconfont ic-share-weibo"></i></a>-->
+        <!--<a href="#" class="option"><i class="iconfont ic-share-wechat"></i></a>-->
+      <!--</div>-->
+      <!--<p class="title">管理员</p>-->
+      <!--<ul class="list collection-editor">-->
+        <!--<li v-for="(item,index) in moreInfo.editors">-->
+          <!--<a href="#" class="avatar"><img :src="item.img" alt=""></a>-->
+          <!--<a href="#" class="name" v-text="item.name"></a>-->
+          <!--<span class="tag" v-show="index === 0">创建者</span>-->
+        <!--</li>-->
+      <!--</ul>-->
+    <!--</div>-->
   </div>
 </template>
 

@@ -13,18 +13,15 @@ const mutations = {
     state.user = user
   },
   [types.CHANGE_USER_INFO](state,payload){
-    if(payload.isChecked){
-      localStorage.setItem('userInfo',JSON.stringify(payload))
-    }else{
-      sessionStorage.setItem('userInfo',JSON.stringify(payload))
-    }
+    localStorage.setItem('userInfo',JSON.stringify(payload))
+    sessionStorage.setItem('userInfo',JSON.stringify(payload))
     state.user = payload
   },
   [types.LOGOUT](state,payload){
     localStorage.removeItem('userInfo')
     sessionStorage.removeItem('userInfo')
-    localStorage.removeItem('token')
-    console.log("logout")
+    localStorage.removeItem('Access-Token')
+    sessionStorage.removeItem('Access-Token')
     state.user = null
   }
 };

@@ -100,12 +100,12 @@
       // 去服务端生成七牛token
       // this.fetchUploadToken()
       // 判断是否有文章存在，如果没有，则不显示编译框
-      console.log(this.articles.articleId)
+      // console.log(this.articles.articleId)
       if(this.articles.articleId){
         this.getArticleById();
 
       }else{
-        // this.isShow = true;
+        this.isShow = true;
       }
 
     },
@@ -115,7 +115,9 @@
           let loading = Loading.service({
             lock: true,
             text: 'Loading',
-            background: 'rgba(0, 0, 0, 0.1)'
+            background: 'rgba(255,255,255, 0.8)',
+            customClass: 'my-loading',
+            text: '加载中....',
           });
           this.checkIsLastTimer().then(ret=>{
             loading.close()
@@ -322,20 +324,20 @@
           message = '删除'
         }
         if(['del','myself'].includes(this.articles.command)){
-          this.updateStatus(data,title).then(res=>{
-            let updateArticleObj = {
-              articleId: res.id,
-              id: this.article.id,
-              title: this.article.title,
-              text: this.article.text,
-              article_num: this.article.article_num,
-              status: res.status
-            }
-            this.storeUpdateArticle(updateArticleObj,this.articles.command)
-            Message.success(message+'成功！')
-          }).catch(err=>{
-            Message.error(message+'失败！')
-          })
+          // this.updateStatus(data,title).then(res=>{
+          //   let updateArticleObj = {
+          //     articleId: res.id,
+          //     id: this.article.id,
+          //     title: this.article.title,
+          //     text: this.article.text,
+          //     article_num: this.article.article_num,
+          //     status: res.status
+          //   }
+          //   this.storeUpdateArticle(updateArticleObj,this.articles.command)
+          //   Message.success(message+'成功！')
+          // }).catch(err=>{
+          //   Message.error(message+'失败！')
+          // })
         }
       },
       updateStatus(data,title='更新操作'){
@@ -362,6 +364,7 @@
     },
     watch: {
       articles: function (cur,old) {
+        console.log('cur:'+cur)
         if(!cur.command){
           if(cur.articleId){
             this.isShow = false

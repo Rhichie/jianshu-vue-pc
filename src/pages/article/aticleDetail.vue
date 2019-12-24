@@ -4,18 +4,18 @@
       <header>
         <div class="title">{{article.title}}</div>
         <div class="user">
-          <img :src="user.header_url"/>
+          <img :src="null||require('../../assets/logo.png')"/>
           <div class="content">
             <div class="user-msg">
-              <span class="name">{{user.username}}</span>
-              <a class="btn btn-success follow"><i class="el-icon-plus"></i><span>关注</span></a>
+              <span class="name">{{article.nickname}}</span>
+              <!--<a class="btn btn-success follow"><i class="el-icon-plus"></i><span>关注</span></a>-->
             </div>
             <div class="meta">
-              <span class="publish-time">{{article.updated_at}}</span>
-              <span class="wordage">字数 {{article.article_num}}</span>
-              <span class="views-count">阅读 {{article.ready_num}}</span>
-              <span class="comments-count">评论 {{article.comment_num}}</span>
-              <span class="likes-count">喜欢 {{article.like_num}}</span>
+              <span class="publish-time">{{article.publishTime}}</span>
+              <!--<span class="wordage">字数 {{article.article_num}}</span>-->
+              <!--<span class="views-count">阅读 {{article.ready_num}}</span>-->
+              <span class="comments-count">评论 {{article.commentNum}}</span>
+              <span class="likes-count">喜欢 {{article.likeNum}}</span>
             </div>
           </div>
         </div>
@@ -23,61 +23,62 @@
       <mavonEditor class="markdown" codeStyle="dark" :boxShadow="false" :scrollStyle="false" :value="article.content"
                    :toolbarsFlag="toolbarsFlag" :subfield="toolbarsFlag" defaultOpen="preview"></mavonEditor>
       <footer>
-        <div class="appreciate">
-          <div class="title">小礼物走一走，来简书关注我</div>
-          <div class="addAppreciate">
-            <el-button type="danger" round>赞赏支持</el-button>
-          </div>
-          <ul :style="{'padding-left': ul_style_padding}" ref="ul_style">
-            <li><img src="../../assets/img/hot1.jpg"/></li>
-            <li><img src="../../assets/img/hot2.jpg"/></li>
-            <li><img src="../../assets/img/hot3.jpg"/></li>
-          </ul>
-        </div>
-        <div class="text-type">
-          <div class="type-left"><i class="el-icon-tickets"></i>凌云木练笔的地方</div>
-          <div class="type-right">
-            <span>举报文章</span>
-            <el-tooltip class="item" effect="dark" content="© 著作权归作者所有" placement="top">
-              <el-button>© 著作权归作者所有</el-button>
-            </el-tooltip>
-          </div>
-        </div>
+        <!--<div class="appreciate">-->
+          <!--<div class="title">小礼物走一走，来简书关注我</div>-->
+          <!--<div class="addAppreciate">-->
+            <!--<el-button type="danger" round>赞</el-button>-->
+          <!--</div>-->
+          <!--<ul :style="{'padding-left': ul_style_padding}" ref="ul_style">-->
+            <!--<li><img src="../../assets/img/hot1.jpg"/></li>-->
+            <!--<li><img src="../../assets/img/hot2.jpg"/></li>-->
+            <!--<li><img src="../../assets/img/hot3.jpg"/></li>-->
+          <!--</ul>-->
+        <!--</div>-->
+        <!--<div class="text-type">-->
+          <!--<div class="type-left"><i class="el-icon-tickets"></i>凌云木练笔的地方</div>-->
+          <!--<div class="type-right">-->
+            <!--<span>举报文章</span>-->
+            <!--<el-tooltip class="item" effect="dark" content="© 著作权归作者所有" placement="top">-->
+              <!--<el-button>© 著作权归作者所有</el-button>-->
+            <!--</el-tooltip>-->
+          <!--</div>-->
+        <!--</div>-->
         <div class="userMsg">
           <div class="box-top">
-            <img :src="user.header_url"/>
+            <img :src="null||require('../../assets/logo.png')"/>
             <div class="context">
-              <div class="context-title">{{user.username}}</div>
-              <div class="context-text">写了 29407 字，被 2316 人关注，获得了 3021 个喜欢</div>
+              <div class="context-title">{{article.nickname}}</div>
+              <!--<div class="context-text">写了 29407 字，被 2316 人关注，获得了 3021 个喜欢</div>-->
             </div>
-            <a class="btn btn-success follow"><i class="el-icon-plus"></i><span>关注</span></a>
+            <!--<a class="btn btn-success follow"><i class="el-icon-plus"></i><span>关注</span></a>-->
           </div>
-          <div class="box-bottom">99年小姐姐，目前大二，坐标南京. 爱好是音乐 写字 旅行 💤️ 最温情的段子手，最坦荡的标题党. 本性想做个女liu</div>
+          <!--<div class="box-bottom">99年小姐姐，目前大二，坐标南京. 爱好是音乐 写字 旅行 💤️ 最温情的段子手，最坦荡的标题党. 本性想做个女liu</div>-->
         </div>
         <div class="utils">
           <el-button type="danger" plain style="float: left"><i class="icon-ali-xihuan1"></i> 喜欢 | 13</el-button>
-          <el-tooltip class="item" effect="dark" content="分享到微信" placement="top">
-            <el-button icon="icon-ali-weixin" circle style="color: #00bb29"></el-button>
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="分享到微博" placement="top">
-            <el-button icon="icon-ali-weibo" circle style="color: #e05244"></el-button>
-          </el-tooltip>
-          <el-popover
-            placement="top"
-            trigger="hover">
-            <img src="../../assets/img/qrcode.png" width="150" height="150"/>
-            <el-button slot="reference" icon="icon-ali-tupian" circle></el-button>
-          </el-popover>
-          <el-dropdown trigger="click" placement="top">
-            <span class="el-dropdown-link">
-              <el-button round style="padding: 13px 23px">更多分享</el-button>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item><i class="icon-ali-unie652"></i> QQ</el-dropdown-item>
-              <el-dropdown-item><i class="icon-ali-twitter"></i> Twitter</el-dropdown-item>
-              <el-dropdown-item><i class="icon-ali-facebook"></i> Facebook</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+          <div style="clear: both;"></div>
+          <!--<el-tooltip class="item" effect="dark" content="分享到微信" placement="top">-->
+            <!--<el-button icon="icon-ali-weixin" circle style="color: #00bb29"></el-button>-->
+          <!--</el-tooltip>-->
+          <!--<el-tooltip class="item" effect="dark" content="分享到微博" placement="top">-->
+            <!--<el-button icon="icon-ali-weibo" circle style="color: #e05244"></el-button>-->
+          <!--</el-tooltip>-->
+          <!--<el-popover-->
+            <!--placement="top"-->
+            <!--trigger="hover">-->
+            <!--<img src="../../assets/img/qrcode.png" width="150" height="150"/>-->
+            <!--<el-button slot="reference" icon="icon-ali-tupian" circle></el-button>-->
+          <!--</el-popover>-->
+          <!--<el-dropdown trigger="click" placement="top">-->
+            <!--<span class="el-dropdown-link">-->
+              <!--<el-button round style="padding: 13px 23px">更多分享</el-button>-->
+            <!--</span>-->
+            <!--<el-dropdown-menu slot="dropdown">-->
+              <!--<el-dropdown-item><i class="icon-ali-unie652"></i> QQ</el-dropdown-item>-->
+              <!--<el-dropdown-item><i class="icon-ali-twitter"></i> Twitter</el-dropdown-item>-->
+              <!--<el-dropdown-item><i class="icon-ali-facebook"></i> Facebook</el-dropdown-item>-->
+            <!--</el-dropdown-menu>-->
+          <!--</el-dropdown>-->
         </div>
         <div class="add-comment">
           <div class="comment-top">
@@ -93,10 +94,10 @@
         <div class="comment-list">
           <div class="top-title">
             <span>{{commentList.rows.length}}条评论</span>
-            <div class="pull-right">
-              <a class="active">按时间倒序</a>
-              <a class="">按时间正序</a>
-            </div>
+            <!--<div class="pull-right">-->
+              <!--<a class="active">按时间倒序</a>-->
+              <!--<a class="">按时间正序</a>-->
+            <!--</div>-->
           </div>
           <ul>
             <li v-for="info in commentList.rows">
@@ -106,13 +107,13 @@
                     <div class="v-tooltip-container" style="z-index: 0;">
                       <div class="v-tooltip-content">
                         <a @click.prevent target="_blank" class="avatar">
-                          <img :src="info.user_header_url">
+                          <img :src="null||require('../../assets/logo.png')">
                         </a>
                       </div>
                     </div>
                     <div class="info">
-                      <a @click.prevent target="_blank" class="name">{{info.user_name}}</a>
-                      <div class="meta"><span>时间: {{info.created_at}}</span></div>
+                      <a @click.prevent target="_blank" class="name">{{info.nickname}}</a>
+                      <div class="meta"><span>时间: {{info.createTime}}</span></div>
                     </div>
                   </div>
                   <div class="comment-wrap">
@@ -126,26 +127,26 @@
                         <i class="icon-ali-duanxin"></i>
                         <span>回复</span>
                       </a>
-                      <a class="report"><span>举报</span></a>
+                      <!--<a class="report"><span>举报</span></a>-->
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="sub-comment-list" v-if="info.t_comment_replys && info.t_comment_replys.length>0">
-                <div class="sub-comment" v-for="reply in info.t_comment_replys">
+              <div class="sub-comment-list" v-if="info.replys && info.replys.length>0">
+                <div class="sub-comment" v-for="reply in info.replys">
                   <div class="v-tooltip-container" style="z-index: 0;">
                     <div class="v-tooltip-content">
-                      <a @click.prevent target="_blank">{{reply.from_user_name}}</a>
+                      <a @click.prevent target="_blank">{{reply.nickname}}</a>
                       <span>：</span>
                     </div>
                   </div>
 
                   <span>
-                    <a @click.prevent class="maleskine-author" v-if="reply.to_user_name">@{{reply.to_user_name}}</a>
+                    <a @click.prevent class="maleskine-author" v-if="reply.toNickname">@{{reply.toNickname}}</a>
                     <span>{{reply.content}}</span>
                   </span>
                   <div class="sub-tool-group">
-                    <span>{{reply.created_at}}</span>
+                    <span>{{reply.createTime}}</span>
                     <a class="reply" @click.prevent @click="saveType(info,1,reply)">
                       <i class="iconfont ic-comment"></i>
                       <span>回复</span>
@@ -191,7 +192,7 @@
         id: '',
         toolbarsFlag: false,
         article: {
-          content: '```asdf```'
+          content: ''
         },
         user: {},
         ul_style_padding: '45%',
@@ -210,16 +211,15 @@
       })
     },
     mounted() {
-      this.id = this.$route.query.id
-      this.fetchArticle(this.id)
-      this.ul_style_padding = (this.$refs.ul_style.clientWidth - 3 * 35) / 2 + 15 + 'px'
+      this.articleId = this.$route.query.articleId
+      this.fetchArticle(this.articleId)
       this.getCommentList()
+      this.ul_style_padding = (this.$refs.ul_style.clientWidth - 3 * 35) / 2 + 15 + 'px'
     },
     methods: {
       getCommentList() {
-        console.log(this.userInfo)
-        this.$axios.get('getCommentListByArticleId',{params:{article_id:this.id, user_id: this.userInfo.uid}}).then(res=>{
-          this.commentList.rows = res.rows.map(item => {
+        this.$axios.post('/articleComment/getCommentListByArticleId',{articleId:this.articleId}).then(res=>{
+          this.commentList.rows = res.data.data.map(item => {
             item.showEditBtn = false;
             item.commentText = '';
             return item
@@ -229,15 +229,15 @@
         })
       },
       addComment() {
-        this.$axios.post('addComment',{query:{article_id: this.id , content: this.commentInput }}).then(res=>{
-          res.data.showEditBtn = false
-          res.data.commentText = ''
+        this.$axios.post('/articleComment/addComment',{articleId: this.articleId , content: this.commentInput}).then(res=>{
+          res.data.data.showEditBtn = false
+          res.data.data.commentText = ''
           this.commentInput = ''
           this.commentBut = false
-          this.commentList.rows.unshift(res.data)
+          this.commentList.rows.unshift(res.data.data)
           Message.success('评论成功')
         }).catch(err=>{
-          Message.success('评论失败')
+          Message.error('评论失败')
         })
       },
       saveType(info,type,reply){
@@ -249,25 +249,25 @@
       },
       addCommentReply(info) {
         let query = {}
-        query.comment_id = info.id
+        query.commentId = info.commentId
         query.content = info.commentText
         if(info.butType === 1){
-          query.to_user_id = info.reply.from_user_id
-          query.to_user_name = info.reply.from_user_name
-          query.reply_id = info.reply.id
+          query.toUserId = info.reply.userId
+        } else {
+          query.toUserId = info.userId
         }
 
-        this.$axios.post('addCommentReply',{query: query}).then(res=>{
-          if(info.t_comment_replys&&info.t_comment_replys.length>0){
-            info.t_comment_replys.push(res.data)
+        this.$axios.post('/articleCommentReply/addCommentReply', query).then(res=>{
+          if(info.replys &&info.replys.length>0){
+            info.replys.push(res.data.data)
           }else {
-            info.t_comment_replys = [res.data]
+            info.replys = [res.data.data]
           }
           info.showEditBtn = false
           info.commentText = ''
           Message.success('回复评论成功')
         }).catch(err=>{
-          Message.success('回复评论失败')
+          Message.error('回复评论失败')
         })
 
       },
@@ -287,10 +287,10 @@
           })
         }).catch(err=>{})
       },
-      fetchArticle(id) {
-        this.$axios.get('getArticleDetailById', {params: {id: id}}).then(res => {
-          this.article = res.article;
-          this.user = res.user;
+      fetchArticle(articleId) {
+        this.$axios.post('/article/getArticleDetailById', {articleId:articleId}).then(res => {
+          this.article = res.data.data
+          // this.user = res.user
         }).catch(err => {
         })
       },

@@ -104,7 +104,8 @@
     },
     computed: {
       ...mapState({
-        articles: state => state.Article.updateArticle
+        articles: state => state.Article.updateArticle,
+        userInfo: state =>  state.Users.user
       })
     },
     methods: {
@@ -123,7 +124,7 @@
         }
       },
       articleSetting(command) {
-        // this.storeGetArticle(command)
+        this.storeGetArticle(command)
         if (command === 'ok'){
           this.$store.dispatch('getArticle', { id:this.checkArticleInfo.articleId, backId:this.checkArticleInfo.backId, articleSetId: this.checkTypeInfo.id, command: command })
         }
@@ -145,8 +146,10 @@
               this.articleList = this.articleList.filter(element => {
                 return element.articleId != res.data.data;
               });
-              if (this.typeList.length > 0) {
-                this.typeList[0].selected = true;
+              // 重新选择文章
+              if (this.articleList.length > 0) {
+                // this.articleList[0].selected = true;
+                this.articleSelected(this.articleList[0])
               }
 
               Message({
@@ -174,18 +177,24 @@
       },
       typeSetting(command) {
         if (command === 'del') {
-          MessageBox.confirm('此操作将 "' + this.checkTypeInfo.type_name + '" 文集永久删除该文件, 是否继续?', '提示', {
+          MessageBox.confirm('此操作将 "' + this.checkTypeInfo.name + '" 文集永久删除该文件, 是否继续?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning',
             center: true
           }).then(() => {
-            this.$axios.post('delArticleSet', {id: this.checkTypeInfo.id}).then(res => {
+            this.$axios.post('/articleSet/delArticleSet', {articleSetId: this.checkTypeInfo.articleSetId}).then(res => {
               this.typeList = this.typeList.filter(element => {
-                return element.id != res.id;
+                return element.articleSetId != res.data.data
               });
               if (this.typeList.length > 0) {
                 this.typeList[0].selected = true;
+                this.typeSelected(this.typeList[0])
+              } else {
+                // 没有文集了 重置
+                this.articleList = []
+                this.checkArticleInfo = {}
+                this.storeGetArticle()
               }
 
               Message({
@@ -205,11 +214,11 @@
             inputPattern: /\S/,
             inputErrorMessage: '文集名称不能为空'
           }).then(({value}) => {
-            this.$axios.post('updateType', {id: this.checkTypeInfo.id, typeName: value}).then(res => {
+            this.$axios.post('/articleSet/updateArticleSet', {articleSetId: this.checkTypeInfo.articleSetId, name: value}).then(res => {
               this.typeList = this.typeList.map(element => {
-                if (element.id == res.id) {
-                  res.selected = true
-                  return res;
+                if (element.articleSetId == res.data.data.articleSetId) {
+                  res.data.data.selected = true
+                  return res.data.data;
                 }
                 return element;
               });
@@ -233,7 +242,9 @@
         this.getArticleListByTypes(this.checkTypeInfo.articleSetId)
       },
       getTypeList() {
-        this.$axios.post('/articleSet/getListByUserId',{}).then(res => {
+        this.$axios.post('/articleSet/getListByUserId',{
+          userId:this.userInfo.userId
+        }).then(res => {
           this.typeList = res.data.data.map((info, index) => {
             if (index === 0) {
               info.selected = true
@@ -264,15 +275,20 @@
       },
       getArticleListByTypes(type_id) {
         this.$axios.post('/article/getArticleBackByTypeId', {articleSetId: type_id}).then(res => {
-          this.articleList = res.data.data.map((info, index) => {
-            if (index === 0){
-              info.selected = true
-              this.checkArticleInfo = info
-            }else{
-              info.selected = false
-            }
-            return info;
-          })
+          if (res.data.data && res.data.data.length > 0) {
+            this.articleList = res.data.data.map((info, index) => {
+              if (index === 0){
+                info.selected = true
+                this.checkArticleInfo = info
+              }else{
+                info.selected = false
+              }
+              return info;
+            })
+          } else {
+            this.articleList = []
+            this.checkArticleInfo = {}
+          }
         }).catch(err => {
 
         })
@@ -280,7 +296,7 @@
       storeGetArticle(command = null) {
         let getArticle = {}
         if(this.checkArticleInfo.articleId){
-          getArticle = { articleId:this.checkArticleInfo.articleId, backId:this.checkArticleInfo.backId, articleSetId: this.checkTypeInfo.articleSetId, command: command }
+          getArticle = { articleId:this.checkArticleInfo.articleId, articleSetId: this.checkTypeInfo.articleSetId, command: command }
         }
         this.$store.dispatch('getArticle', getArticle)
       }

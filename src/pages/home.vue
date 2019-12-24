@@ -14,16 +14,16 @@
                 @click="changeMark(index)"></span>
         </div>
       </div>
-      <div class="hots">
-        <a class="hot" @click="viewMore(hot.name)" v-for="hot in hots">
-          <img :src="hot.src" alt=""><span class="name" v-text="hot.name"></span>
-        </a>
-        <a href="#" class="more-hot">更多热门主题<i class="iconfont ic-link"></i></a>
-      </div>
+      <!--<div class="hots">-->
+        <!--<a class="hot" @click="viewMore(hot.name)" v-for="hot in hots">-->
+          <!--<img :src="hot.src" alt=""><span class="name" v-text="hot.name"></span>-->
+        <!--</a>-->
+        <!--<a href="#" class="more-hot">更多热门主题<i class="iconfont ic-link"></i></a>-->
+      <!--</div>-->
       <div class="split-line"></div>
       <!--按需加载文章-->
-      <article-list :articleList="articles.rows"></article-list>
-      <div class="more" v-show="articles.rows.length > 0 && moreButton">
+      <article-list :articleList="articles.records"></article-list>
+      <div class="more" v-show="articles.records && articles.records.length > 0 && moreButton">
         <el-button type="info" round @click="articleMore"><i class="el-icon-loading" v-show="moreButtonLoading"></i>阅读更多</el-button>
       </div>
 
@@ -36,13 +36,13 @@
         <a href="#"><img src="../assets/img/banner4.png" alt=""></a>
         <a href="#"><img src="../assets/img/banner5.png" alt=""></a>
       </div>
-      <a href="javascript:;" id="download-qrcode">
-        <img src="../assets/img/qrcode.png" alt="" class="qrcode">
-        <div class="info">
-          <div class="title" @click="getArticleList">下载简书手机App<i class="iconfont ic-link"></i></div>
-          <div class="description">随时随地发现和创作内容</div>
-        </div>
-      </a>
+      <!--<a href="javascript:;" id="download-qrcode">-->
+        <!--<img src="../assets/img/qrcode.png" alt="" class="qrcode">-->
+        <!--<div class="info">-->
+          <!--<div class="title" @click="getArticleList">下载简书手机App<i class="iconfont ic-link"></i></div>-->
+          <!--<div class="description">随时随地发现和创作内容</div>-->
+        <!--</div>-->
+      <!--</a>-->
       <recommended-author></recommended-author>
     </div>
   </div>
@@ -62,6 +62,7 @@
     computed: {
       ...mapState({
         // articles: state => state.Author.authorInformation[0].articleLists.hots
+        searchWord: state => state.Article.searchWord
       })
     },
     data() {
@@ -69,7 +70,7 @@
         timer: null,
         mark: 0,  //比对图片索引的变量
         carouselImg: [
-          require('../assets/img/carousel1.jpg'),
+          require('../assets/img/carousel1.gif'),
           require('../assets/img/carousel2.jpg'),
           require('../assets/img/carousel3.jpg')
         ],
@@ -83,9 +84,9 @@
           {src: require('../assets/img/hot7.jpg'), name: '历史'},
         ],
         articles:{
-          rows:[],
-          offset:0,
-          limit:20,
+          records:[],
+          current:0,
+          size:10,
         },
         moreButton: true,
         moreButtonLoading: false,
@@ -95,22 +96,27 @@
       this.getArticleList();
     },
     methods: {
-      getArticleList() {
-        this.$axios.post('/article/getArticleList',{
-
-        }).then(res => {
+      getArticleList(override) {
+        let param = {
+          current: this.articles.current + 1,
+          size: this.articles.size,
+          searchWord: this.searchWord
+        }
+        this.$axios.post('/article/getArticleList', param).then(res => {
           this.moreButtonLoading = false;
-          if(res.rows.length < this.articles.limit){
-            this.moreButton = false
+          this.articles.current = res.data.data.current
+          this.articles.size = res.data.data.size
+          if (override) {
+            this.articles.records = res.data.data.records
+          } else {
+            this.articles.records = this.articles.records.concat(res.data.data.records)
           }
-          if(res.rows.length > 0){
-            this.articles.offset = this.articles.offset + res.count;
-          }else{
+          if(res.data.data.current < res.data.data.pages){
+            this.moreButton = true
+          } else{
             this.moreButton = false
-            Message.success('已经没有更多新的信息了')
             return false;
           }
-          this.articles.rows.push(...res.rows);
         }).catch(err => {
         })
       },
@@ -144,6 +150,13 @@
     },
     created() {
       this.selfAdd();
+    },
+    watch: {
+      // 监控搜索词条变化，重新搜索
+      searchWord(cur, old) {
+        this.articles.current  = 0;
+        this.getArticleList(true)
+      }
     }
   }
 </script>
@@ -169,7 +182,7 @@
     overflow: hidden;
     z-index: 1000;
     width: 615px;
-    height: 270px;
+    height: 348px;
     position: relative;
     border: 1px solid #eeeeee;
   }
@@ -180,7 +193,7 @@
 
   .homepage .homepageCarousel .carouselshow {
     width: 615px;
-    height: 270px;
+    height: 348px;
   }
 
   .homepage .homepageCarousel li {
@@ -189,7 +202,7 @@
 
   .homepage .homepageCarousel img {
     width: 615px;
-    height: 270px;
+    height: 348px;
   }
 
   .homepage .homepageCarousel .carousel-bar {

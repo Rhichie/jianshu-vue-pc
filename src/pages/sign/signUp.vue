@@ -63,7 +63,8 @@ export default {
     return {
       nickname:'',
       username:'',
-      password:''
+      password:'',
+      imageUrl:''
     }
   },
   methods:{
@@ -122,7 +123,33 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+  .input-avatar {
+    margin-top: 20px;
+  }
 .signUp {
   margin-top: -30px;
   height: 100%;

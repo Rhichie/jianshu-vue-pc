@@ -55,7 +55,7 @@
           <!--<div class="box-bottom">99年小姐姐，目前大二，坐标南京. 爱好是音乐 写字 旅行 💤️ 最温情的段子手，最坦荡的标题党. 本性想做个女liu</div>-->
         </div>
         <div class="utils">
-          <el-button type="danger" plain style="float: left"><i class="icon-ali-xihuan1"></i> 喜欢 | 13</el-button>
+          <!--<el-button type="danger" plain style="float: left"><i class="icon-ali-xihuan1"></i> 喜欢 | 13</el-button>-->
           <div style="clear: both;"></div>
           <!--<el-tooltip class="item" effect="dark" content="分享到微信" placement="top">-->
             <!--<el-button icon="icon-ali-weixin" circle style="color: #00bb29"></el-button>-->

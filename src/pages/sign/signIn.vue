@@ -1,6 +1,7 @@
 <template>
   <div class="sign">
-    <div class="logo"><a href="/"><img src="../../assets/img/logo.png" alt="LOGO"></a></div>
+    <div class="logo">
+      <a href="/kdk"><img src="../../assets/logo.png" alt="LOGO"></a></div>
     <div class="main">
       <h4 class="title">
         <div class="normal-title">
@@ -91,6 +92,7 @@ export default {
           }
         })
           .then(res => {
+            sessionStorage['Access-Token'] = res.data.data.token
             localStorage['Access-Token'] = res.data.data.token
             this.$axios.defaults.headers.Authorization = localStorage['Access-Token']
             // 设置 cookie 一定要存 uuid整个系统依赖这个数据进行校验和存储

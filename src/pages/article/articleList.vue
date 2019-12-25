@@ -2,7 +2,7 @@
   <div class="list-container">
     <ul class="note-list">
       <li class="have-img" v-for="item in articleList">
-        <!--<a @click.prevent class="wrap-img"><img :src="item.images[0]" alt="" class="img-blur-done" v-if="item.images.length > 0 "></a>-->
+        <a @click.prevent class="wrap-img"><img :src="item.pictures[0].path" alt="" class="img-blur-done" v-if="item.pictures && item.pictures.length > 0 "></a>
         <div class="content">
           <router-link :to="{path:'/articleDetail',query:{articleId:item.articleId}}" class="title">
             {{item.title}}

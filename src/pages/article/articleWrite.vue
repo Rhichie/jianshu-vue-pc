@@ -264,7 +264,6 @@
           return false;
         }
         this.$axios.post('/articleSet/addArticleSet', {name: this.typeName}).then(res => {
-          console.log(res)
           this.typeName = ''
           this.newShow = false
           Message.success("添加成功")

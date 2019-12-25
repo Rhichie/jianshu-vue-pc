@@ -5,7 +5,7 @@ import Cookies from 'js-cookie'
 import $router from '../../router'
 let loading = null
 axios.defaults.baseURL = '/kdk_api/'
-axios.defaults.headers['Access-Token'] = localStorage['Access-Token'] || null
+axios.defaults.headers['Access-Token'] = localStorage['Access-Token']
 axios.interceptors.request.use(function (config) {
   // Do something before request is sent
 
@@ -19,6 +19,7 @@ axios.interceptors.request.use(function (config) {
   }
 
   config.headers['x-csrf-token'] = Cookies.get('csrfToken')
+  config.headers['Access-Token'] = localStorage['Access-Token']
   return config
 }, function (error) {
   if(loading){
@@ -43,11 +44,12 @@ axios.interceptors.response.use(res => {
   if(loading){
     loading.close()
   }
+  console.log(error.response.status)
   // 服务器错误
   if (error.response.status == 500) {
     Message.error('服务器错误');
-  } else if (error.response.status === 401) {
-    router.push({path:'/signIn'})
+  } else if (error.response.status == 401) {
+    Message.error('请先登录');
     return
   }
   return Promise.reject(error)

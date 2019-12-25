@@ -274,10 +274,17 @@
         this.file = file
         this.pos = pos
         let key = this.file.name
-        // 调用七牛的接口将图片上传至七牛
-        let observable = qiniu.upload(this.file, key, this.token)
-        observable.subscribe(this.uploadNext, this.uploadError, this.uploadComplete)
-        return false
+        var formdata = new FormData();
+        formdata.append('file', file);
+        this.$axios({
+          url: '/articlePicture/upload',
+          method: 'post',
+          data: formdata,
+          headers: { 'Content-Type': 'multipart/form-data' },
+        }).then((res) => {
+          this.$refs.md.$img2Url(this.pos, res.data.data)
+        })
+        return true
       },
       uploadNext(res) {
         // ...
